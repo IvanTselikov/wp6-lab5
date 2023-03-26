@@ -2,9 +2,10 @@
 from flask import render_template
 from app import app
 
+from app.static.mock import *
+
 
 @app.route('/')
 @app.route('/index')
 def index():
-    user = {'username': 'Miguel'}
-    return render_template('index.html', title='Home', user=user)
+    return render_template('index.html', title='Главная', user=user, posts=posts)
