@@ -1,33 +1,7 @@
-<!-- https://mdbootstrap.com/docs/standard/extended/news-feed/ - редактирование постов -->
-<!-- https://i.imgur.com/8RKXAIV.jpg -->
-
-
 {% extends "base.html" %}
 
-{% block nav_links %}
-<li class="nav-item">
-    <a class="nav-link" href="#">Подписки</a>
-</li>
-
-<li class="nav-item dropdown">
-    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false" v-pre>
-        {{ user.firstName }} {{ user.lastName }}
-    </a>
-
-    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-        <a class="dropdown-item" href="#">
-            Моя страница
-        </a>
-        <a class="dropdown-item" href="#">
-            Выйти
-        </a>
-    </div>
-</li>
-{% endblock %}
-
 {% block content %}
-<div class="pt-4 text-center">
+<div class="text-center bg-white pt-4">
     <img src={{ user.profilePhoto }} class="border rounded-circle" alt="avatar" />
     <h3 class="mt-2">{{ user.firstName }} {{ user.lastName }}</h3>
     <p class="text-secondary mb-4">@{{ user.login }}</p>

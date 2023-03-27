@@ -21,7 +21,7 @@ def format_timedelta(delta):
             return '{} {}'.format(count, part['name'])
 
 
-user = {'firstName': 'Артём', 'lastName': 'Петров', 'login': 'andrey.petrov', 'profilePhoto': 'https://mdbcdn.b-cdn.net/img/new/avatars/2.webp'}
+user = {'firstName': 'Артём', 'lastName': 'Петров', 'login': 'artem.petrov', 'profilePhoto': 'https://mdbcdn.b-cdn.net/img/new/avatars/2.webp'}
 
 posts = [
     {'sender': user, 'sentAt': '2023-03-26 10:21:07', 'text': 'Вы собираетесь отправиться в путешествие, чтобы узнать, как создавать веб-приложения с помощью Python и микрофреймворка Flask. Видео выше даст вам обзор содержимого этого руководства. В этой первой главе вы узнаете, как настроить проект Flask. В конце этой главы у вас будет простое веб-приложение Flask, работающее на вашем компьютере!'},
