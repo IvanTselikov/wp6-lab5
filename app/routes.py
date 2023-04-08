@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, flash, redirect, url_for
 from app.forms import LoginForm, SignupForm
-from app import app
-from app import db
+from app import app, db
 
 from app.static.mock import *
 
@@ -17,7 +16,7 @@ from werkzeug.urls import url_parse
 @app.route('/index')
 @login_required
 def index():
-    return render_template('index.html', title='Главная', posts=posts)
+    return render_template('index.html', title='Главная', posts=posts, all_users=User.query.all())
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -58,3 +57,35 @@ def signup():
         login_user(user)
         return redirect(url_for('index'))
     return render_template('signup.html', title='Регистрация', form=form)
+
+
+@app.route('/follow/<username>')
+@login_required
+def follow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('Пользователь {} не найден.'.format(username))
+        return redirect(url_for('index'))
+    if user == current_user:
+        flash('Вы не можете подписаться на себя.')
+        return redirect(url_for('user', username=username))
+    current_user.follow(user)
+    db.session.commit()
+    flash('Вы успешно подписались на {}.'.format(username))
+    return redirect(url_for('index', username=username))
+
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('Пользователь {} не найден.'.format(username))
+        return redirect(url_for('index'))
+    if user == current_user:
+        flash('Вы не можете отписаться от себя.')
+        return redirect(url_for('user', username=username))
+    current_user.unfollow(user)
+    db.session.commit()
+    flash('Вы успешно отписались от {}.'.format(username))
+    return redirect(url_for('index', username=username))
