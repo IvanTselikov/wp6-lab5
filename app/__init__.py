@@ -11,3 +11,11 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 
 from app import routes, models
+
+login = LoginManager(app)
+login.login_view = 'login'
+login.login_message = 'Пожалуйста, войдите для просмотра этой страницы.'
+
+@login.user_loader
+def load_user(id):
+    return models.User.query.get(int(id))

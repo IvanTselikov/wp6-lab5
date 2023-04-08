@@ -8,15 +8,27 @@
                 <div class="card-header">Вход</div>
 
                 <div class="card-body">
+                    <div class="container-fluid" style="min-height:100%">
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
                     <form method="POST" action="" novalidate>
                         {{ form.hidden_tag() }}
 
                         <div class="row mb-3">
-                            {{ form.login.label(class="col-md-4 col-form-label text-md-end") }}
+                            {{ form.username.label(class="col-md-4 col-form-label text-md-end") }}
 
                             <div class="col-md-6">
-                                {{ form.login(size=32, class="form-control", autocomplete="off") }}
-                                {% for error in form.login.errors %}
+                                {{ form.username(size=32, class="form-control", autocomplete="off") }}
+                                {% for error in form.username.errors %}
                                 <div class="form-text text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>

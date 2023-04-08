@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, validators
-from wtforms.validators import DataRequired
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from app.models import User
 
 
 class LoginForm(FlaskForm):
-    login = StringField('Логин', validators=[
-        DataRequired('Пожалуйста, введите логин.')
+    username = StringField('Имя пользователя', validators=[
+        DataRequired('Пожалуйста, введите имя пользователя.')
     ])
     password = PasswordField('Пароль', validators=[
         DataRequired('Пожалуйста, введите пароль.')
@@ -15,21 +16,13 @@ class LoginForm(FlaskForm):
 
 
 class SignupForm(FlaskForm):
-    first_name = StringField('Имя', validators=[
-        DataRequired('Пожалуйста, введите имя.')
-    ])
-
-    last_name = StringField('Фамилия', validators=[
-        DataRequired('Пожалуйста, введите фамилию.')
-    ])
-
-    login = StringField(
-        label='Логин',
-        description='логин - не менее 6 символов',
+    username = StringField(
+        label='Имя пользователя',
+        description='имя пользователя - не менее 6 символов',
         validators=[
-            DataRequired('Пожалуйста, введите логин.'),
+            DataRequired('Пожалуйста, введите имя пользователя.'),
             validators.Length(
-                min=6, message='Логин слишком короткий.'
+                min=6, message='Слишком короткое имя пользователя.'
             )
         ]
     )
@@ -48,4 +41,19 @@ class SignupForm(FlaskForm):
     )
 
     confirm_password = PasswordField('Повторите пароль')
+
+    email = StringField('Email', validators=[
+                        DataRequired('Пожалуйста, введите email.'), Email(message='Неправильный email адрес.')])
+
     submit = SubmitField('Зарегистрироваться')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError(
+                'Пользователь с таким именем уже существует.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError('Данный email уже используется.')
