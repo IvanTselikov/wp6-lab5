@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, validators
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, validators
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
@@ -57,3 +57,18 @@ class SignupForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Данный email уже используется.')
+
+
+class PostForm(FlaskForm):
+    body = TextAreaField(
+        label='Пост',
+        description='Длина поста - от 1 до 140 символов.',
+        validators=[
+            DataRequired('Текст поста не должен быть пустым.'),
+            validators.Length(
+                max=140, message='Слишком длинный пост.'
+            )
+        ]
+    )
+
+    submit = SubmitField('Опубликовать')

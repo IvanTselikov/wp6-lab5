@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, flash, redirect, url_for
-from app.forms import LoginForm, SignupForm
+from app.forms import LoginForm, SignupForm, PostForm
 from app import app, db
 
-from app.static.mock import *
-
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Post
 
 from flask import request
 from werkzeug.urls import url_parse
@@ -16,7 +14,8 @@ from werkzeug.urls import url_parse
 @app.route('/index')
 @login_required
 def index():
-    return render_template('index.html', title='Главная', posts=posts, all_users=User.query.all())
+    form = PostForm()
+    return render_template('index.html', title='Главная', all_users=User.query.all(), form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -68,11 +67,11 @@ def follow(username):
         return redirect(url_for('index'))
     if user == current_user:
         flash('Вы не можете подписаться на себя.')
-        return redirect(url_for('user', username=username))
+        return redirect(url_for('index'))
     current_user.follow(user)
     db.session.commit()
     flash('Вы успешно подписались на {}.'.format(username))
-    return redirect(url_for('index', username=username))
+    return redirect(url_for('index'))
 
 
 @app.route('/unfollow/<username>')
@@ -84,8 +83,38 @@ def unfollow(username):
         return redirect(url_for('index'))
     if user == current_user:
         flash('Вы не можете отписаться от себя.')
-        return redirect(url_for('user', username=username))
+        return redirect(url_for('user'))
     current_user.unfollow(user)
     db.session.commit()
     flash('Вы успешно отписались от {}.'.format(username))
-    return redirect(url_for('index', username=username))
+    return redirect(url_for('index'))
+
+
+@app.route('/new_post', methods=['POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    post = Post(body=form.body.data)
+    current_user.create_post(post)
+    db.session.commit()
+    flash('Новый пост успешно создан.')
+    return redirect(url_for('index'))
+
+
+@app.route('/delete_post/<post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    current_user.delete_post(post_id)
+    db.session.commit()
+    flash('Пост успешно удалён.')
+    return redirect(url_for('index'))
+
+
+@app.route('/edit_post/<post_id>', methods=['POST'])
+@login_required
+def edit_post(post_id):
+    form = PostForm()
+    current_user.edit_post(post_id, form.body.data)
+    db.session.commit()
+    flash('Пост успешно изменён.')
+    return redirect(url_for('index'))
