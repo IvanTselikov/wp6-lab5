@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, validators
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.validators import ValidationError, DataRequired, Email, Length, EqualTo
 from app.models import User
 
 
@@ -21,9 +21,7 @@ class SignupForm(FlaskForm):
         description='имя пользователя - не менее 6 символов',
         validators=[
             DataRequired('Пожалуйста, введите имя пользователя.'),
-            validators.Length(
-                min=6, message='Слишком короткое имя пользователя.'
-            )
+            Length(min=6, message='Слишком короткое имя пользователя.')
         ]
     )
 
@@ -32,11 +30,8 @@ class SignupForm(FlaskForm):
         description='пароль - не менее 8 символов',
         validators=[
             DataRequired('Пожалуйста, введите пароль.'),
-            validators.Length(
-                min=8, message='Пароль слишком короткий.'
-            ),
-            validators.EqualTo('confirm_password',
-                               message='Пароли должны совпадать.')
+            Length(min=8, message='Пароль слишком короткий.'),
+            EqualTo('confirm_password', message='Пароли должны совпадать.')
         ]
     )
 
@@ -65,9 +60,7 @@ class PostForm(FlaskForm):
         description='Длина поста - от 1 до 140 символов.',
         validators=[
             DataRequired('Текст поста не должен быть пустым.'),
-            validators.Length(
-                max=140, message='Слишком длинный пост.'
-            )
+            Length(max=140, message='Слишком длинный пост.')
         ]
     )
 

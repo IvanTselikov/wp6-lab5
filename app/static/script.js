@@ -10,7 +10,7 @@ $(document).ready(function () {
     postBody.addClass("d-none");
 
     const postEditForm = postSection.find(".edit-post-form");
-    postEditForm.find("textarea").text(postBody.text());
+    postEditForm.find("textarea").val(postBody.text());
     postEditForm.removeClass("d-none");
   });
 

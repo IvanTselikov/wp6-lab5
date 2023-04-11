@@ -55,7 +55,8 @@ class User(UserMixin, db.Model):
         for post in posts:
             delta = dt.utcnow() - post.timestamp
             sentAgo.append(format_timedelta(delta))
-            senderUsernames.append(User.query.filter_by(id = post.user_id).first().username)
+            senderUsernames.append(User.query.filter_by(
+                id=post.user_id).first().username)
 
         return zip(posts, sentAgo, senderUsernames)
 
@@ -77,7 +78,7 @@ class User(UserMixin, db.Model):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, index=True, default=dt.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):

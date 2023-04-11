@@ -1,6 +1,3 @@
-from datetime import datetime
-
-
 def format_timedelta(delta):
     time_parts = [
         {'name': 'нед', 'duration': 60*60*24*7},
